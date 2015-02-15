@@ -94,30 +94,18 @@ module.exports = {
       }
     }).exec({
       success: function(httpResponse) {
-
         // Parse response body and build up result.
         var responseBody;
         try {
           responseBody = JSON.parse(httpResponse.body);
-          console.log(responseBody);
+
+          if (responseBody.cod === '404') {
+            return exits.noCityFound('No City Found.');
+          }
+
           return exits.success(responseBody);
         } catch (e) {
           return exits.error('Unexpected response from the OpenWeather API:\n' + util.inspect(responseBody, false, null) + '\nParse error:\n' + util.inspect(e));
-        }
-      },
-      // Non-2xx status code returned from server
-      notOk: function(httpResponse) {
-
-        try {
-          var responseBody = JSON.parse(httpResponse.body);
-
-          if (httpResponse.status === 404) {
-            return exits.noCityFound('No City Found.');
-          }
-          // Unknown OpenWeather error
-          return exits.error(httpResponse);
-        } catch (e) {
-          return exits.error('Unexpected response from OpenWeather API:\n' + util.inspect(responseBody, false, null) + '\nParse error:\n' + util.inspect(e));
         }
       },
       // An unexpected error occurred.
