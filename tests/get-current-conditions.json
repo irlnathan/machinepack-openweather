@@ -1,0 +1,29 @@
+{
+  "machine": "get-current-conditions",
+  "expectations": [
+    {
+      "using": {
+        "city": "Austin, TX"
+      },
+      "outcome": "success"
+    },
+    {
+      "using": {
+        "city": "Austin"
+      },
+      "outcome": "success"
+    },
+    {
+      "using": {
+        "city": "San Francisco"
+      },
+      "outcome": "success"
+    },
+    {
+      "using": {
+        "city": "foobar, CA"
+      },
+      "outcome": "noCityFound"
+    }
+  ]
+}
