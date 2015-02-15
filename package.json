@@ -1,0 +1,34 @@
+{
+  "name": "machinepack-openweather",
+  "version": "0.1.0",
+  "description": "Communicate with the OpenWeather API to get current weather for a city.",
+  "scripts": {
+    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
+  },
+  "keywords": [
+    "OpenWeather",
+    "machines",
+    "machinepack"
+  ],
+  "author": "Irl Nathan",
+  "license": "MIT",
+  "dependencies": {
+    "machine": "^3.0.0",
+    "lodash": "^3.2.0",
+    "machinepack-http": "^2.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/irlnathan/machinepack-openweather.git"
+  },
+  "devDependencies": {
+    "test-machinepack-mocha": "^0.2.2"
+  },
+  "machinepack": {
+    "friendlyName": "OpenWeather",
+    "machineDir": "machines/",
+    "machines": [
+      "get-current-conditions"
+    ]
+  }
+}
