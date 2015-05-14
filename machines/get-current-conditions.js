@@ -6,6 +6,7 @@ module.exports = {
     apiKey: {
       example: 'xAmBxAmBxAmBkjbyKkjbyKkjbyK',
       description: 'The private API key for this application.',
+      protect: true,
       whereToGet: {
         url: 'http://openweathermap.org/appid#get',
         description: 'Copy and paste an API key, or create one if you haven\'t already.',
@@ -68,8 +69,7 @@ module.exports = {
         },
         dt: 1424018333,
         id: 4671654,
-        name: 'Austin',
-        cod: 200
+        name: 'Austin'
       }
     }
   },
@@ -78,10 +78,11 @@ module.exports = {
     var _ = require('lodash');
     var Http = require('machinepack-http');
 
+    var cityStateOrCountry;
     if (inputs.stateOrCountry) {
-      var cityStateOrCountry = inputs.city + ',' + inputs.stateOrCountry;
+      cityStateOrCountry = inputs.city + ',' + inputs.stateOrCountry;
     } else {
-      var cityStateOrCountry = inputs.city;
+      cityStateOrCountry = inputs.city;
     }
 
     Http.sendHttpRequest({
