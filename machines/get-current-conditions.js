@@ -86,8 +86,8 @@ module.exports = {
         if (inputs.city !== undefined && httpResponse.statusCode === 404) { return exits.noCityFound(); }
         return exits.error(new Error('Unexpected response from the OpenWeather API:\n' + util.inspect(httpResponse, {depth: 5})));
       },
-      success: function(httpResponse) {
-        return exits.success(httpResponse.body);
+      success: function(data) {
+        return exits.success(data);
       }
     });//</ Http.get() >
 
