@@ -1,29 +1,45 @@
 {
   "machine": "get-current-conditions",
   "expectations": [
+
+    // by city
     {
       "using": {
+        "apiKey": "YOUR_API_KEY_HERE",
         "city": "Austin, TX"
       },
       "outcome": "success"
     },
     {
       "using": {
+        "apiKey": "YOUR_API_KEY_HERE",
         "city": "Austin"
       },
       "outcome": "success"
     },
     {
       "using": {
+        "apiKey": "YOUR_API_KEY_HERE",
         "city": "San Francisco"
       },
       "outcome": "success"
     },
     {
       "using": {
-        "city": "foobar, CA"
+        "apiKey": "YOUR_API_KEY_HERE",
+        "city": "foobarbeepboopbopbippity, CA"
       },
       "outcome": "noCityFound"
+    },
+
+    // lat+long
+    {
+      "using": {
+        "apiKey": "YOUR_API_KEY_HERE",
+        "latitude": 38,
+        "longitude": 101,
+      },
+      "outcome": "success"
     }
   ]
 }

@@ -1,118 +1,96 @@
 module.exports = {
+
+
   friendlyName: 'Get current conditions',
-  description: 'List the current weather conditions for a particular city.',
-  extendedDescription: '',
+
+
+  description: 'List the current weather conditions for a particular city or set of coordinates.',
+
+
   inputs: {
-    apiKey: {
-      example: 'xAmBxAmBxAmBkjbyKkjbyKkjbyK',
-      description: 'The private API key for this application.',
-      protect: true,
-      whereToGet: {
-        url: 'http://openweathermap.org/appid#get',
-        description: 'Copy and paste an API key, or create one if you haven\'t already.',
-        extendedDescription: ''
-      }
+    apiKey: require('../constants/api-key.input'),
+    latitude: {
+      example: 37.03252,
+      extendedDescription: 'If left unspecified, `city` must be provided instead.  Otherwise, both `latitude` and `longitude` must be specified.'
+    },
+    longitude: {
+      example: -150.43283,
+      extendedDescription: 'If left unspecified, `city` must be provided instead.  Otherwise, both `latitude` and `longitude` must be specified.'
     },
     city: {
       example: 'austin',
-      description: 'The city for the current weather conditions.',
-      required: true
+      extendedDescription: 'If left unspecified, `latitude` and `longitude` must be provided instead.  Otherwise, `city` must be specified.'
     },
     stateOrCountry: {
       example: 'texas',
-      description: 'The state or country for the current weather conditions.'
+      description: 'The state or country wherein the specified city is located (for the purposes of disambiguation.)',
+      extendedDescription: 'If provided, `city` must also be specified.  (This is used for disambiguating city lookups, and making them more accurate.)'
     }
   },
-  defaultExit: 'success',
+
+
   exits: {
-    error: {
-      description: 'Unexpected error occurred.'
-    },
     noCityFound: {
-      description: 'No city found.'
+      description: 'No such city could be found.',
+      extendedDescription: 'This exception is only relevant if a `city` was specified.  Otherwise it will never be triggered.'
     },
     success: {
-      description: 'Returns current conditions for a city.',
-      example: {
-        coord: {
-          lon: -97.74,
-          lat: 30.27
-        },
-        sys: {
-          message: 0.25,
-          country: 'United States of America',
-          sunrise: 1424005831,
-          sunset: 1424045975
-        },
-        weather: [{
-          id: 803,
-          main: 'Clouds',
-          description: 'broken clouds',
-          icon: '04d'
-        }],
-        base: 'cmc stations',
-        main: {
-          temp: 292.36,
-          temp_min: 292.36,
-          temp_max: 292.36,
-          pressure: 1007.21,
-          sea_level: 1032.2,
-          grnd_level: 1007.21,
-          humidity: 64
-        },
-        wind: {
-          speed: 4.42,
-          deg: 189.5
-        },
-        clouds: {
-          all: 76
-        },
-        dt: 1424018333,
-        id: 4671654,
-        name: 'Austin'
-      }
+      outputDescription: 'Current weather conditions.',
+      outputExample: require('../constants/weather-conditions.exemplar'),
+      moreInfoUrl: 'http://openweathermap.org/current#parameter'
     }
   },
+
+
   fn: function(inputs, exits) {
     var util = require('util');
-    var _ = require('lodash');
     var Http = require('machinepack-http');
 
-    var cityStateOrCountry;
-    if (inputs.stateOrCountry) {
-      cityStateOrCountry = inputs.city + ',' + inputs.stateOrCountry;
-    } else {
-      cityStateOrCountry = inputs.city;
+    // Negotiate argins, building request data along the way.
+    var requestData = {
+      appid: inputs.apiKey
+    };
+    if (inputs.latitude !== undefined || inputs.longitude !== undefined) {
+      if (inputs.latitude === undefined || inputs.longitude === undefined) {
+        return exits.error(new Error('If `latitude` is specified, `longitude` must also be specified, and vice versa.'));
+      }
+      if (inputs.city !== undefined || inputs.stateOrCountry !== undefined) {
+        return exits.error(new Error('If `latitude` or `longitude` is specified, then neither `city` nor `stateOrCountry` ought to be specified.'));
+      }
+      requestData.lat = inputs.latitude;
+      requestData.lon = inputs.longitude;
+    }
+    else if (inputs.city !== undefined) {
+
+      var cityStateOrCountry;
+      if (inputs.stateOrCountry !== undefined) {
+        cityStateOrCountry = inputs.city + ',' + inputs.stateOrCountry;
+      } else {
+        cityStateOrCountry = inputs.city;
+      }
+
+      requestData.q = cityStateOrCountry;
+    }
+    else {
+      return exits.error(new Error('Either a `city` or `latitude`+`longitude` must be specified.'));
     }
 
-    Http.sendHttpRequest({
+
+    Http.get({
       baseUrl: 'http://api.openweathermap.org',
       url: '/data/2.5/weather',
-      method: 'get',
-      params: {
-        api_key: inputs.apiKey,
-        q: cityStateOrCountry
-      }
+      data: requestData
     }).exec({
-      success: function(httpResponse) {
-        // Parse response body and build up result.
-        var responseBody;
-        try {
-          responseBody = JSON.parse(httpResponse.body);
-
-          if (responseBody.cod === '404') {
-            return exits.noCityFound('No City Found.');
-          }
-
-          return exits.success(responseBody);
-        } catch (e) {
-          return exits.error('Unexpected response from the OpenWeather API:\n' + util.inspect(responseBody, false, null) + '\nParse error:\n' + util.inspect(e));
-        }
+      error: function(err) { return exits.error(err); },
+      non200Response: function(httpResponse) {
+        if (inputs.city !== undefined && httpResponse.statusCode === 404) { return exits.noCityFound(); }
+        return exits.error(new Error('Unexpected response from the OpenWeather API:\n' + util.inspect(httpResponse, {depth: 5})));
       },
-      // An unexpected error occurred.
-      error: function(err) {
-        return exits.error(err);
+      success: function(httpResponse) {
+        return exits.success(httpResponse.body);
       }
-    });
-  }
-}
+    });//</ Http.get() >
+
+  },
+
+};
