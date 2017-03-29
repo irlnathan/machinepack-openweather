@@ -1,6 +1,6 @@
 {
   "name": "machinepack-openweather",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Machines for communicating with the OpenWeather API from Node.js; e.g. to get current weather for a city, or for a specific latitude and longitude.",
   "scripts": {
     "custom-tests": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js",
