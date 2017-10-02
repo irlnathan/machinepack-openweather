@@ -25,11 +25,11 @@ module.exports = {
 
   main: {
     temp: 292.36,
-    temp_min: 292.36,
-    temp_max: 292.36,
+    temp_min: 292.36,//eslint-disable-line camelcase
+    temp_max: 292.36,//eslint-disable-line camelcase
     pressure: 1007.21,
-    sea_level: 1032.2,
-    grnd_level: 1007.21,
+    sea_level: 1032.2,//eslint-disable-line camelcase
+    grnd_level: 1007.21,//eslint-disable-line camelcase
     humidity: 64
   },
 

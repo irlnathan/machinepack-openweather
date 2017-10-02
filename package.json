@@ -3,9 +3,9 @@
   "version": "2.0.1",
   "description": "Methods for communicating with the OpenWeather API from Node.js; e.g. to get current weather for a city, or for a specific latitude and longitude.",
   "scripts": {
-    "custom-tests": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js",
+    "custom-tests": "echo 'No other tests yet.'",
     "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0",
-    "test": "npm run custom-tests && nodever=`node -e \"console.log('\\`node -v\\`'[1]);\"` && if [ $nodever != \"0\" ]; then npm run lint; fi"
+    "test": "npm run custom-tests && npm run lint"
   },
   "keywords": [
     "OpenWeather",
