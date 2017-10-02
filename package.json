@@ -1,6 +1,6 @@
 {
   "name": "machinepack-openweather",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Methods for communicating with the OpenWeather API from Node.js; e.g. to get current weather for a city, or for a specific latitude and longitude.",
   "scripts": {
     "custom-tests": "echo 'No other tests yet.'",
