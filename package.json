@@ -1,7 +1,7 @@
 {
   "name": "machinepack-openweather",
   "version": "2.0.1",
-  "description": "Machines for communicating with the OpenWeather API from Node.js; e.g. to get current weather for a city, or for a specific latitude and longitude.",
+  "description": "Methods for communicating with the OpenWeather API from Node.js; e.g. to get current weather for a city, or for a specific latitude and longitude.",
   "scripts": {
     "custom-tests": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js",
     "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0",
@@ -19,20 +19,20 @@
   "author": "Irl Nathan",
   "license": "MIT",
   "dependencies": {
-    "machine": "^13.0.0-22",
-    "machinepack-http": "^3.0.0"
+    "machine": "^15.0.0-2",
+    "machinepack-http": "^4.0.0-0"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:irlnathan/machinepack-openweather.git"
   },
   "devDependencies": {
-    "eslint": "3.5.0",
+    "eslint": "3.19.0",
     "test-machinepack-mocha": "^0.2.4"
   },
   "machinepack": {
     "friendlyName": "OpenWeather",
-    "machineDir": "machines/",
+    "machineDir": "lib/",
     "machines": [
       "get-current-conditions"
     ],
